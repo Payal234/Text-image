@@ -1,0 +1,58 @@
+
+
+ @import url('https://fonts.googleapis.com/css2?family=Inder&family=Inter:opsz,wght@14..32,500&family=Outfit:wght@100..900&display=swap');
+
+ @tailwind base;
+ @tailwind components;
+ @tailwind utilities;
+
+ *{
+  font-family: Outfit;
+ }
+ .placeholder-color{
+    color: #e0e0e0;
+    font-weight: 300;
+ }
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply transition-colors duration-300 ease-in-out;
+}
+
+
+html.dark {
+  background-color: #121212; 
+  color: #ffffff;
+}
+
+
+html.dark .bg-white {
+  background-color: #333333; 
+}
+
+html.dark .text-black {
+  color: #ffffff; 
+}
+
+html.dark p  {
+  color: white;
+}
+
+html.dark h1  {
+  color: white;
+}
+
+html.dark img {
+  filter: invert(0) brightness(1);
+}
+
+html.dark h3{
+   color: #121212;
+}
+
+html.dark p span {
+  color: rgb(30, 29, 29);
+}

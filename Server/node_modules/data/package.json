@@ -1,0 +1,23 @@
+{
+  "name": "data",
+  "version": "1.0.0",
+  "description": "reactive data",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "microbundle build --name Data -o build --generateTypes --raw ",
+    "serve": "npx tsc && npx serve",
+    "test:render": "npx playwright test",
+    "test:data": "node --experimental-strip-types --no-warnings --test data.test.ts",
+    "test": "npm run test:data && npm run test:render"
+  },
+  "keywords": [],
+  "author": "pemrouz",
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/node": "^22.10.2",
+    "microbundle": "^0.15.1",
+    "serve": "^14.2.4",
+    "typescript": "^5.7.2"
+  }
+}

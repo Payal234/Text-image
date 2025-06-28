@@ -1,0 +1,305 @@
+<link rel="stylesheet" href="/examples/crossfilter/index.css">
+<body></body>
+<script type="module">
+  import { $, render, HTML, SVG, value } from '/index.js'
+//   import { data } from '/examples/crossfilter/flights500.js'
+  import { data } from '/examples/crossfilter/flights.js'
+  const { svg, g, path, rect, clipPath } = SVG
+  const { div, body, span, a } = HTML
+  const { min, max, floor } = Math
+  const { keys } = Object
+
+  // format helpers
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const pad = d => d.length === 1 ? ('0' + d) : d
+  const formatDistance = d => d === undefined ? undefined
+    : d.toLocaleString() + ' mi.'
+  const formatChange = d => d === undefined ? undefined
+    : (d < 0 ? '' : '+') + d + 'min.'
+  const formatTime = d => d === undefined ? undefined
+    : pad('' + (d.getHours() % 12)) + ':' +
+    pad('' + d.getMinutes()) + ' ' +
+    (d.getHours() > 12 ? 'PM' : 'AM')
+  const formatDate = d =>
+    months[d.date.getMonth()] + ' ' +
+    d.date.getDate() + ', ' +
+    d.date.getFullYear()
+
+  // grouping helpers
+  const byDay = d => floor(d.date / 86400000) * 86400000
+  const byHour = d => floor(d.time)
+  const byTenMins = d => floor(d.delay / 10) * 10
+  const byFiftyMiles = d => floor(d.distance / 50) * 50
+
+  // parsed flights 
+  const source = $(data)
+  const flights = window.flights = source.map(({ destination, origin, ...d }) => {
+    const date = parseDate(d.date)
+    const time = date.getHours() + date.getMinutes() / 60
+    const delay = max(-60, min(149, d.delay))
+    const distance = min(1999, d.distance)
+    return { date, time, delay, distance, origin, destination }
+  }).za('date', Infinity)
+
+  // current filters for each dimension
+  const filters = window.filters = $({
+    delay: [],
+    distance: [],
+    time: [],
+    date: [+new Date(2001, 0, 2), +new Date(2001, 2, 1)],
+  })
+
+  // flights filtered by selected ranges
+  const delay = window.delay = flights.between('delay', filters.delay)
+  const distance = window.distance = flights.between('distance', filters.distance)
+  const date = window.date = flights.between('date', filters.date)
+  const time = window.time = flights.between('time', filters.time)
+  const active = window.x = date.intersect(distance, delay, time)
+window.v = value
+  // data to drive charts
+  const charts = window.charts = {
+    time: {
+      title: 'Time of Day',
+      data: delay.intersect(distance, date).length(byHour),
+      domain: [0, 24],
+      width: 240,
+    //   max: flights.length(byHour).za('value', 1)[value][0].value
+    },
+    delay: {
+      title: 'Arrival Delay (min.)',
+      data: distance.intersect(date, time).length(byTenMins),
+      domain: [-60, 150],
+      width: 210,
+    //   max: flights.length(byTenMins).za('value', 1)[value][0].value
+    },
+    distance: {
+      title: 'Distance (mi.)',
+      data: delay.intersect(date, time).length(byFiftyMiles),
+      domain: [0, 2000],
+      width: 400,
+    //   max: flights.length(byFiftyMiles).za('value', 1)[value][0].value
+    },
+    date: {
+      title: 'Date',
+      data: delay.intersect(distance, time).length(byDay),
+      domain: [+new Date(2001, 0, 1), +new Date(2001, 3, 1)],
+      width: 900,
+    //   max: flights.length(byDay).za('value', 1)[value][0].value
+    },
+  }
+
+  // data for list 
+  const flightsByDate = window.ac = (window.limit = active
+    .limit(40))
+    .group(formatDate)
+
+  // render everything
+  render(document.body, body(
+    div.charts(
+      div.chart(charts, chart)
+    ),
+    span.text(active.length()),
+    span(' of '),
+    span.text(flights.length()),
+    span(' flights selected'),
+    div.list(
+      div.date(flightsByDate, (node, flights, day) => node(
+        div.day.text(day),
+        div.flight(flights, (node, flight) => node(
+          div.time.text(flight.date.to(formatTime)),
+          div.origin.text(flight.origin),
+          div.destination.text(flight.destination),
+          div.distance.text(flight.distance.to(formatDistance)),
+          div.delay.text(flight.delay.to(formatChange)),
+        ))
+      ))
+    )
+  ))
+
+  // render function for a chart
+  function chart(node, { data, title, domain, width }, name) {
+    // console.log({ name, max })
+    const clip_name = `#clip-${name}`
+    const clip_path = `url(${clip_name})`
+    const margin = { top: 10, right: 10, bottom: 20, left: 10 }
+    const height = 100
+    const x = scale(domain, [0, width]) // TODO fn in res
+    const rx = scale([0, width], domain) // TODO fn in res
+    const [{ value: max }]  = data.za('value', 1) // [0].len // TODO
+    const filter = filters[name]
+    const range = filter
+      .to(([lo = domain[0], hi = domain[1]] = []) => [lo, hi])
+    const extent = range.to(([lo, hi]) => x(hi) - x(lo))
+    const start = range[0].to(d => { /*console.log("start", d, x(d));*/
+      // cZ
+      return x(d)
+    })
+    const xhw = { x: start, height, width: extent }
+    // const ngroups = groups.length()
+    const barPath = data
+      .to(bars(max, domain, width, name/*, ngroups*/))
+    const reset = () => (filters[name] = [])
+
+    return node(
+      div.title(
+        title,
+        a.reset('reset')
+          // style('display', dirty.to(d => d ? 'none' : ''))
+          .on('click', reset),
+      ),
+      svg
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)(
+          g
+            .attr('transform', 'translate(10, 10)')(
+              clipPath[clip_name](
+                rect.attr({ x: start, height, width: extent }),
+              ),
+              path.background.bar.attr('d', barPath),
+              path.foreground.bar
+                .attr('d', barPath)
+                .attr('clip-path', clip_path),
+              g.axis,
+              g.brush
+                (node => background(node, filter, rx, width, height))(
+                // (extent)(
+                // )                
+                // ...background(node, filter, rx, width, height),
+                // ...extent(filter)
+                // ...resizeHandles()
+                rect.extent
+                  .attr('x', start)
+                  .attr('height', height)
+                  .attr('width', filter.to(d => {
+
+                    // console.log({ d, ex: extent[value] })
+                    return  d.length ? extent[value] : 0
+                  })),
+                ...[0, 1].map(resizeHandle(filter, domain, x, rx))
+              )
+            )
+        )
+    )
+  }
+
+  function background(node, filter, rx, width, height) {
+    let down = false
+    let initial
+    const c = (el, { x }) => rx(x - el.getBoundingClientRect().left)
+
+    return node
+      .on('pointerdown', function (d) {
+        down = true
+        initial = (c(this, d))
+        filter[value] = [initial, initial]
+      })
+      .on('pointermove', function (d) {
+        if (down) {
+          const new_val = (c(this, d))
+          filter[value] = new_val > initial
+            ? [initial, new_val]
+            : [new_val, initial]
+        }
+      })
+      .on('pointerup', d => {
+        down = false
+        if (filter[0][value] === filter[1][value])
+          filter[value] = []
+      })(
+        rect.background.attr({ width, height }),
+      )
+  }
+
+  function resizeHandle(filters, initial, x, rx) {
+    return function (i) {
+      let down = false
+      const translate = (d = initial[i]) => `translate(${x(d)}, 0)`
+      const c = (el, { x }) => rx(x - el.getBoundingClientRect().left)
+      const filter = filters[i]
+      const height = 100
+      const classes = ['w', 'e']
+      const d = i ? 1 : -1
+      const y = height / 3
+      const resizePath = 'M' + (.5 * d) + ',' + y
+        + 'A6,6 0 0 ' + i + ' ' + (6.5 * d) + ',' + (y + 6)
+        + 'V' + (2 * y - 6)
+        + 'A6,6 0 0 ' + i + ' ' + (.5 * d) + ',' + (2 * y)
+        + 'Z'
+        + 'M' + (2.5 * d) + ',' + (y + 8)
+        + 'V' + (2 * y - 8)
+        + 'M' + (4.5 * d) + ',' + (y + 8)
+        + 'V' + (2 * y - 8)
+
+      return g.resize
+        .class(classes[i])
+        .attr('transform', filter.to(translate))
+        .style('display', filter.to(d => d ? '' : 'none'))
+        .on('pointerdown', function(d) { 
+          down = true 
+        })
+        .on('pointermove', function(e){
+          if (!down) return
+          filter[i] = c(this, e)
+        })
+        .on('pointerup', d => { 
+          down = false 
+        })(
+          rect
+            .attr({ x: -3, width: 6, height })
+            .style('visibility', 'hidden'),
+          path.attr('d', resizePath),
+        )
+    }
+  }
+
+  function parseDate(d) {
+    return new Date(2001,
+      d.substring(0, 2) - 1,
+      d.substring(2, 4),
+      d.substring(4, 6),
+      d.substring(6, 8)
+    );
+  }
+
+  // calculate path for svg bars
+  function bars(max, domain, width, name/*, ngroups*/) {
+    return function (groups) {
+    //   console.log(" bars", { max: max[value], domain, width, name, groups   }) //, groups, max)
+    //   console.log("bars", { max, name, groups } )
+      if (max[value] === undefined) return ''
+      const height = 100
+      const x = scale(domain, [0, width])
+      const y = scale([0, max[value]], [height, 0])
+      // const n = ngroups[value]
+      let path = ''
+      // console.log("groups", max, groups, n, Object.keys(groups).length)
+      for (const i in groups) {
+        // for (let i = 0; i < ngroups; i++) {
+        const len = groups[i].value;
+        // console.log({ i, len, x: x(+i), y: y(len) })
+        path += `M${x(+i)},${height}V${y(len)}h9V${height}`
+      }
+      // console.log("path", path)
+      // for (const i in groups) {
+      // }
+      // console.log(" path",   path)
+      return path//.join("");
+    }
+  }
+
+  // poor man's linear scale
+  function scale(i, o) {
+    return function (value) {
+      if (i[1] === i[0]) return 0
+      const irange = i[1] - i[0]
+      const orange = o[1] - o[0]
+      const m = (value - i[0]) / irange
+      // if (rx) console.log("scale", { m, value, irange, orange, result: o[0] + m*orange })
+      const result = o[0] + m * orange
+      // if (result === Infinity || result === -Infinity)
+      //   console.log("scale fail", { i, o, value })
+      return result
+    }
+  }
+
+</script>

@@ -1,0 +1,134 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+    <title>Ripple • TodoMVC</title>
+    <link rel="stylesheet" href="/examples/todo/base.css">
+    <link rel="stylesheet" href="/examples/todo/index.css">
+</head>
+</html>
+<script type="module">
+    import { $, value, render, HTML } from '/index.js'
+    const { section, div, header, input, h1, label, ul, footer, span, button, li, a, body } = HTML
+    const items = window.items = $({
+        0: { completed: false, title: 'foo' },
+        1: { completed: true, title: 'boo' },
+    })
+    const ESC = 27
+    const ENTER = 13
+    const filters = window.filters = {
+        completed: items.filter('completed', true),
+        active: items.filter('completed', false),
+        all: items,
+    }
+
+    const selected = window.selected = $(filters.all)
+    const change_view = () => {
+        const route = document.location.hash.split('/').pop()
+        selected[value] = filters[route] ?? filters.all
+    }
+
+    addEventListener('hashchange', change_view)
+    change_view()
+
+    const toggle = item => () => {
+        item.completed = !item.completed[value]
+    }
+
+    const edit = item => ev => {
+        item.editing = true
+        item.text = item.title[value]
+        ev.target.parentNode.parentNode.querySelector('.edit').focus()
+    }
+
+    const clear = () => {
+        for (const [id, { completed }] of Object.entries(items[value])) {
+            if (completed === true) {
+                delete items[id]
+            }
+        }
+    }
+
+    const destroy = id => ev => {
+        delete items[id]
+    }
+
+    const submit = item => ev => {
+        item.title = item.text[value]
+        delete item.editing
+        delete item.text
+    }
+
+    const change = item => ev => {
+        item.text = ev.target.value
+    }
+
+    const keydown = item => ev => {
+        if (ev.which === ENTER) ev.target.blur()
+        if (ev.which === ESC) {
+            ev.target.value = item.title[value]
+            ev.target.blur()
+        }
+    }
+
+    const add_todo = ev => {
+        if (ev.which === ENTER)
+            items.insert({ title: ev.target.value })
+    }
+
+    const head = header.header(
+        h1('todos'),
+        input.new_todo
+        ['placeholder=What needs to be done?']
+        ['autofocus=']
+            .on('keydown', add_todo)
+    )
+
+    const main = section.main(
+        input.toggle_all['#toggle-all']['type=checkbox'],
+        label['for=toggle-all']('Mark all as complete'),
+        ul.todo_list(
+            li(selected, (li, item, id) => li
+                .class('completed', item.completed)
+                .class('editing', item.editing)
+                .nodes(
+                    div.view(
+                        input.toggle['type=checkbox']
+                            .attr('checked', item.completed)
+                            .on('change', toggle(item)),
+                        label
+                            .on('dblclick', edit(item))
+                            .text(item.title),
+                        button.destroy
+                            .on('click', destroy(id))
+                    ),
+                    input.edit
+                        .attr('value', item.text)
+                        .on('blur', submit(item))
+                        .on('change', change(item))
+                        .on('keydown', keydown(item))
+                )
+            )
+        )
+    )
+
+    const foot = footer.footer(
+        span.todo_count,
+        ul.filters(
+            li(a.selected['href=#/']('All')),
+            li(a['href=#/active']('Active')),
+            li(a['href=#/completed']('Completed')),
+        ),
+        button
+            .clear_completed('Clear completed')
+            .on('click', clear)
+    )
+
+    render(document.body, body(
+        section.todoapp(
+            head,
+            main,
+            foot,
+        )
+    ))
+
+</script>
