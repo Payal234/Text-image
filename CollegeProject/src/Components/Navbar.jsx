@@ -26,16 +26,7 @@ const Navbar = () => {
               </p>
             </button>
 
-             {/* Added History button */}
-    {/* <button
-  onClick={() => navigate('/history')}
-  className="bg-pink-600 text-white px-3 py-1.5 text-xs rounded-md hover:bg-pink-700 transition"
->
-  History
-</button> */}
-
-
-
+             
             <p className="text-gray-600 max-sm:hidden pl-4">Hi, {user.name}</p>
             <div className="relative group">
               <img
@@ -51,12 +42,6 @@ const Navbar = () => {
                   >
                     Logout
                   </li>
-                   <li
-    onClick={() => navigate('/history')}
-    className="py-1 px-2 cursor-pointer pr-10"
-  >
-    History
-  </li>
                   
                 </ul>
               </div>

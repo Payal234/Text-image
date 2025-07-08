@@ -1,7 +1,7 @@
 import userModel from "../models/userModel.js";
 import FormData from "form-data";
 import axios from "axios";
-// import ImageHistory from '../models/ImageHistoryModel.js';
+
 
 export const generateImage = async (req, res) => {
   try {

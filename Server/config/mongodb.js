@@ -1,7 +1,7 @@
 import mongoose from  "mongoose";
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(`${process.env.MONGODB_URI}/Genimg`, {
+    const conn = await mongoose.connect(`${process.env.MONGODB_URI}/Textimage`, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
