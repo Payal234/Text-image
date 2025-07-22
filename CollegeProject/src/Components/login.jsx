@@ -20,7 +20,7 @@ const Login = () => {
 
     try {
       if (state === "Login") {
-        const { data } = await axios.post(`${backendUrl}/api/user/login`, {
+        const { data } = await axios.post(`https://text-image-n3m8.vercel.app/api/user/login`, {
           email,
           password,
         });

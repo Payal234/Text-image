@@ -6,7 +6,7 @@ import userRouter from './routes/userRoutes.js';
 import imageRouter from './routes/imageRoutes.js'
 
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT ||  "https://text-image-kappa.vercel.app/";
 const app = express();
 
 

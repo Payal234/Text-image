@@ -10,14 +10,14 @@ import { AppContext } from './Context/AppContext'
 import { ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
 import ThemeToggle from './Components/ThemeToggle'
-// import ImageHistory from './Components/ImageHistory'
+
 
 const App = () => {
   const {showLogin} = useContext(AppContext)
 
-  // const userId = '1234567890abcdef'; // U
+ 
   return (
-    // <div className='px-4 sm:px-10 md:px-14 lg:px-28 min-h-screen bg-gradient-to-b from-teal-50 to-pink-50'>
+    
      
      <div className="min-h-screen px-4 sm:px-10 md:px-14 lg:px-28 
                     bg-gradient-to-b from-teal-50 to-pink-50 
@@ -36,7 +36,7 @@ const App = () => {
         <Route path='/result' element={<Result />} />
         <Route path='/buy' element={<BuyCredit />} />
          
-         {/* <Route path='/history' element={<ImageHistory userId={userId} />} /> 🆕 */}
+
       </Routes>
       <Footer/>
 
