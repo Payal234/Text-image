@@ -1,24 +1,19 @@
 import express from 'express';
-import cors from 'cors';
 import 'dotenv/config';
 import connectDB from './config/mongodb.js'; // DB connect function
 import userRouter from './routes/userRoutes.js';
 import imageRouter from './routes/imageRoutes.js';
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 4000;
 
 // Middlewares
 app.use(express.json());
-
-// ✅ Proper CORS configuration
-const corsOptions = {
-  origin: 'https://text-image-kappa.vercel.app', // ✅ Frontend deployed URL
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-};
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: 'https://text-image-kappa.vercel.app',
+  credentials: true
+}));
 
 // Connect DB
 await connectDB();
