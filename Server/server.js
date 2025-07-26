@@ -6,13 +6,18 @@ import userRouter from './routes/userRoutes.js';
 import imageRouter from './routes/imageRoutes.js'
 
 
-const port = process.env.PORT ||  "https://text-image-kappa.vercel.app/";
+const port = process.env.PORT || 4000 ;
 const app = express();
 
 
 app.use(express.json());
-app.use(cors());
 
+
+const corsOptions = {
+  origin: 'https://text-image-kappa.vercel.app',
+  credentials: true, // If you are using cookies or auth headers
+};
+app.use(cors(corsOptions));
 await connectDB ()// calling the function
 app.use('/api/user',userRouter)
  app.use('/api/image' , imageRouter)
