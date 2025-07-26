@@ -3,7 +3,7 @@ import 'dotenv/config';
 import connectDB from './config/mongodb.js'; // DB connect function
 import userRouter from './routes/userRoutes.js';
 import imageRouter from './routes/imageRoutes.js';
-const cors = require('cors');
+import cors from'cors';
 
 const app = express();
 const port = process.env.PORT || 4000;
