@@ -15,6 +15,12 @@ app.use(cors({
   credentials: true
 }));
 
+// Handle preflight requests for all routes
+app.options('*', cors({
+  origin: 'https://text-image-kappa.vercel.app',
+  credentials: true
+}));
+
 // Connect DB
 await connectDB();
 
