@@ -12,8 +12,4 @@ userRouter.post("/register", registerUser);
 userRouter.post("/login", loginUser);
 userRouter.get("/credits", authUser, userCredits);
 
-router.get('/:id', (req, res) => {
-  res.send(req.params.id);
-});
-
 export default userRouter;
