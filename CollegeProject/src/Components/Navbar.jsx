@@ -51,7 +51,7 @@ const Navbar = () => {
           <div className="flex items-center gap-2 sm:gap-5">
             <h3
               onClick={() => navigate("/buy")}
-              className="cursor-pointer bg-pink-50 sm:px-3 py-2 text-blue rounded-full"
+              className="cursor-pointer bg-pink-500 sm:px-3 py-2 text-blue rounded-full"
             >
               Subscription
             </h3>
