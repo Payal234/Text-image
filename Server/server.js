@@ -11,13 +11,7 @@ const port = process.env.PORT || 4000;
 // Middlewares
 app.use(express.json());
 app.use(cors({
-  origin: 'https://text-image-kappa.vercel.app',
-  credentials: true
-}));
-
-// Handle preflight requests for all routes
-app.options('*', cors({
-  origin: 'https://text-image-kappa.vercel.app',
+  origin: ['http://localhost:5173'],
   credentials: true
 }));
 

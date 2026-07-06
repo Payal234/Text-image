@@ -150,11 +150,49 @@ const AppContextProvider = (props) => {
 
     const generateImage = async (prompt) => {
         try {
-            const {data} = await axios.post(backendUrl + '/api/image/generate-image', {prompt}, {headers: {token}})
+            const {data} = await axios.post(backendUrl + '/api/image/generate-image', {prompt, userid: user._id}, {headers: {token}})
 
             if (data.success) {
                 loadCreditsData()
                 return data.resultImage 
+            }else{
+                toast.error(data.message)
+                loadCreditsData()
+                if (data.creditBalance === 0) {
+                    navigate('/buy')
+                }
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
+
+    const generateText = async (prompt) => {
+        try {
+            const {data} = await axios.post(backendUrl + '/api/image/generate-text', {prompt, userid: user._id}, {headers: {token}})
+
+            if (data.success) {
+                loadCreditsData()
+                return data.resultText 
+            }else{
+                toast.error(data.message)
+                loadCreditsData()
+                if (data.creditBalance === 0) {
+                    navigate('/buy')
+                }
+            }
+        } catch (error) {
+            toast.error(error.message)
+        }
+    }
+
+    const generateCode = async (prompt) => {
+        try {
+            const {data} = await axios.post(backendUrl + '/api/image/generate-code', {prompt, userid: user._id}, {headers: {token}})
+
+            if (data.success) {
+                loadCreditsData()
+                return data.resultCode 
             }else{
                 toast.error(data.message)
                 loadCreditsData()
@@ -180,7 +218,7 @@ const AppContextProvider = (props) => {
     },[token])
 
     const value = {
-        user, setUser, showLogin, setShowLogin, backendUrl, token, setToken, credit, setCredit, loadCreditsData, logout, generateImage
+        user, setUser, showLogin, setShowLogin, backendUrl, token, setToken, credit, setCredit, loadCreditsData, logout, generateImage, generateText, generateCode
     }
 
     return (

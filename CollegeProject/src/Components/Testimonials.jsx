@@ -27,7 +27,7 @@ const Testimonials = () => {
                 className="rounded-full w-14"
               />
               <h2 className="text-xl font-semibold mt-3">{testimonail.name}</h2>
-              <p className="text-gray-500 mb-4">{testimonail.role}</p>
+              <p className="text-gray-400 mb-4">{testimonail.role}</p>
               <div className="flex mb-4">
                 {Array(testimonail.stars)
                   .fill()
@@ -35,7 +35,7 @@ const Testimonials = () => {
                     <img key={index} src={assets.rating_star} alt="" />
                   ))}
               </div>
-              <p className="text-center text-sm text-gray-600">
+              <p className="text-center text-sm text-gray-300">
                 {testimonail.text}
               </p>
             </div>

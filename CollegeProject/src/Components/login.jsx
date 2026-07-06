@@ -20,7 +20,7 @@ const Login = () => {
 
     try {
       if (state === "Login") {
-        const { data } = await axios.post(`https://text-image-n3m8.vercel.app/api/user/login`, {
+        const { data } = await axios.post(`/api/user/login`, {
           email,
           password,
         });
@@ -35,7 +35,7 @@ const Login = () => {
           toast.error(data.message);
         }
       } else {
-        const { data } = await axios.post(`https://text-image-n3m8.vercel.app/api/user/register`, {
+        const { data } = await axios.post(`/api/user/register`, {
           name,
           email,
           password,
