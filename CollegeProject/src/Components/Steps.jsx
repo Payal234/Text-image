@@ -11,7 +11,7 @@ const Steps = () => {
       viewport={{ once: true }}
       className="flex flex-col items-center justify-center my-32"
     >
-      <h1 className="text-white bg-white/10 backdrop-blur-md inline-flex text-3xl sm:text-0xl font-bold text-center gap-2 px-12 sm:px-28 py-4 rounded-full border border-gray-600 hover:scale-105 transition-all duration-700 shadow-lg">
+      <h1 className="text-white bg-white/10 backdrop-blur-md inline-flex text-3xl sm:text-4xl font-bold text-center gap-2 px-6 sm:px-28 py-4 rounded-full border border-gray-600 hover:scale-105 transition-all duration-700 shadow-lg">
         How AI Magic Works
       </h1>
       <p className="text-lg text-gray-300 mb-8 mt-4">

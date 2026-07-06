@@ -71,7 +71,7 @@ const Login = () => {
         transition={{ duration: 0.3 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="relative bg-white p-10 rounded-xl text-slate-500"
+        className="relative bg-white p-6 sm:p-10 mx-4 sm:mx-0 rounded-xl text-slate-500 w-full max-w-sm sm:max-w-md"
       >
         <h1 className="text-center text-2xl text-neutral-700 font-medium">
           {state}

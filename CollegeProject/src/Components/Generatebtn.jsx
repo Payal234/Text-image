@@ -11,14 +11,14 @@ const GenerateBtn = () => {
       transition={{ duration: 1 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="pb-16 text-center"
+      className="pb-8 sm:pb-16 text-center"
     >
-      <h1 className="text-2xl md:text-3xl lg:text-4xl mt-4 font-semibold text-white py-6 md:py-16">
+      <h1 className="text-2xl md:text-3xl lg:text-4xl mt-4 font-semibold text-white py-6 md:py-16 px-4">
         See the Magic. Try Now
       </h1>
       <button
         onClick={() => navigate("/buy")}
-        className="inline-flex items-center gap-2 px-12 py-3 rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-medium shadow-[0_0_15px_rgba(236,72,153,0.3)] m-auto hover:scale-105 transition-all duration-500"
+        className="inline-flex items-center gap-2 px-8 sm:px-12 py-2.5 sm:py-3 text-sm sm:text-base rounded-full bg-gradient-to-r from-pink-500 to-purple-600 text-white font-medium shadow-[0_0_15px_rgba(236,72,153,0.3)] m-auto hover:scale-105 transition-all duration-500"
       >
         Subscription
         <img src={assets.star_group} alt="" className="h-6 filter brightness-0 invert" />

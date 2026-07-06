@@ -9,16 +9,16 @@ const Testimonials = () => {
       transition={{ duration: 1 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="flex flex-col items-center justify-center my-20 p-12"
+      className="flex flex-col items-center justify-center my-20 p-4 sm:p-12"
     >
       <h1 className="text-3xl sm:text-4xl font-semibold mb-2">User Reviews</h1>
       <p className="text-gray-500 mb-12">What our customers say</p>
 
-      <div className="flex flex-wrap gap-6">
+      <div className="flex flex-wrap justify-center gap-6">
         {testimonialsData.map((testimonail, index) => (
           <div
             key={index}
-            className="bg-white/20 p-12 rounded-lg shadow-md border w-80 m-auto cursor-pointer hover:scale-[1.02] transition-all"
+            className="bg-white/20 p-8 sm:p-12 rounded-lg shadow-md border w-full max-w-[320px] md:w-80 m-auto cursor-pointer hover:scale-[1.02] transition-all"
           >
             <div className="flex flex-col items-center">
               <img

@@ -17,7 +17,7 @@ const Description = () => {
         <img
           src="https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80"
           alt="AI Futuristic"
-          className="w-80 xl:w-96 rounded-xl shadow-2xl border border-white/20"
+          className="w-full max-w-[320px] md:w-80 xl:w-96 rounded-xl shadow-2xl border border-white/20"
         />
         <div>
           <h2 className="text-3xl font-medium max-w-lg mb-4 text-white">

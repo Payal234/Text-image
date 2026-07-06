@@ -67,7 +67,7 @@ const Result = () => {
       className="flex flex-col min-h-[90vh] justify-center items-center text-white"
     >
       {/* Tab Navigation */}
-      <div className="flex gap-4 mb-6">
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-6">
         <button
           type="button"
           onClick={() => handleTabChange('image')}
@@ -113,14 +113,16 @@ const Result = () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
-              className="relative"
+              className="w-full flex justify-center px-4 sm:px-0"
             >
-              <img src={image} alt="Generated" className="max-w-sm rounded-xl shadow-2xl border border-white/20" />
-              <span
-                className={`absolute bottom-0 left-0 h-1 bg-pink-500 rounded-b-lg ${
-                  loading ? 'w-full transition-all duration-[10s]' : 'w-0'
-                }`}
-              />
+              <div className="relative w-full max-w-sm">
+                <img src={image} alt="Generated" className="w-full rounded-xl shadow-2xl border border-white/20" />
+                <span
+                  className={`absolute bottom-0 left-0 h-1 bg-pink-500 rounded-b-xl ${
+                    loading ? 'w-full transition-all duration-[10s]' : 'w-0'
+                  }`}
+                />
+              </div>
             </motion.div>
           )}
 
@@ -205,17 +207,17 @@ const Result = () => {
               type="text"
               placeholder={
                 activeTab === 'image'
-                  ? "Describe your idea, and our AI will generate it!"
+                  ? "Describe your idea..."
                   : activeTab === 'text'
-                  ? "What text content would you like to generate?"
-                  : "Describe the code you want to generate (e.g. 'Build a to-do list')"
+                  ? "What text content?"
+                  : "Describe the code (e.g. 'Build a to-do list')"
               }
-              className="flex-1 bg-transparent outline-none ml-6 max-sm:w-20 placeholder:text-gray-300"
+              className="flex-1 bg-transparent outline-none ml-4 sm:ml-6 min-w-0 placeholder:text-gray-300"
               disabled={loading}
             />
             <button
               type="submit"
-              className="bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90 transition-opacity px-10 sm:px-16 py-3 rounded-full font-medium shadow-lg"
+              className="bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90 transition-opacity px-6 sm:px-16 py-3 rounded-full font-medium shadow-lg whitespace-nowrap"
               disabled={loading || !input.trim()}
             >
               Generate

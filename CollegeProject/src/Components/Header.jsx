@@ -58,7 +58,7 @@ const Header = () => {
 
       <motion.button
         onClick={onClickHandler}
-        className="sm:text-lg text-white bg-pink-700 w-auto mt-8 px-12 py-2.5 flex items-center gap-2 rounded-full"
+        className="sm:text-lg text-white bg-pink-700 w-auto mt-8 px-8 sm:px-12 py-2.5 flex items-center gap-2 rounded-full"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         initial={{ opacity: 0 }}
