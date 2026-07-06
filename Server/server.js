@@ -30,6 +30,10 @@ app.get('/', (req, res) => {
   res.send('API Working ✅');
 });
 
+app.use(cors({
+  origin: ["https://text-image-kappa.vercel.app", "http://localhost:5173"],
+  credentials: true,
+}));
 // Start Server (Only works properly on Render, Railway etc. — Not Vercel)
 app.listen(port, () => {
   console.log(`🚀 Server started on PORT: ${port}`);
