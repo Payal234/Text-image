@@ -18,7 +18,7 @@ const BuyCredit = () => {
 
     try {
       const { data } = await axios.post(
-        `${backendUrl}/api/user/pay-razor`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/user/pay-razor`,
         { userid: user._id, planId },
         { headers: { token } }
       );
@@ -34,7 +34,7 @@ const BuyCredit = () => {
           handler: async (response) => {
             try {
               const verifyRes = await axios.post(
-                `${backendUrl}/api/user/verify-razor`,
+                `${import.meta.env.VITE_BACKEND_URL}/api/user/verify-razor`,
                 response,
                 { headers: { token } }
               );
